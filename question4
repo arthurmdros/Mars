@@ -1,0 +1,58 @@
+.data
+	valor: .asciiz "Valor: "
+	tamanho: .asciiz "Tamanho: "
+	linha: .asciiz "\n"
+
+.text
+main:
+	li $t0, 0 # p = 0
+	
+	# Display do tamanho
+	li $v0, 4
+	la $a0, tamanho
+	syscall
+	
+	li $v0,5
+	syscall
+	
+	move $t1,$v0  # len = $t1 = $v0
+	
+	#malloc
+	
+	j loop	
+	
+	
+loop:
+	#LAÇO PARA PEGAR OS VALORES DO VETOR
+	li $s0,0
+	bne $s0, $t1, end
+	li $v0, 5
+	syscall
+	#FALTA ARMAZENAR O VALOR INSERIDO NO ARRAY
+	
+	addi $s0, $s0, 1
+	
+	j loop	
+	
+end:
+	#CONEXÃO COM AS FUNÇÕES
+	jal printVetor
+	jal ord
+		
+	li $v0,10
+	syscall
+		
+printVetor:
+
+	li $s0,0
+	bne $s0, $t1, end
+	li $v0, 5
+	syscall
+	#FALTA ARMAZENAR O VALOR INSERIDO NO ARRAY
+	
+	addi $s0, $s0, 1
+	
+	j loop	
+	
+
+ord:						

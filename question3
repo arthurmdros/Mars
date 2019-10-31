@@ -1,0 +1,78 @@
+.data
+	prompt: .asciiz "Informe um número para a base: "
+	prompt1: .asciiz "Informe um número para o expoente: "
+	result: .asciiz "O valor da potenciação é: "	
+.text
+
+main:
+	#Mensagem para informar o número da base
+	li $v0, 4
+	la $a0, prompt
+	syscall
+	
+	#Input para pegar o valor inserido
+	li $v0, 5
+	syscall
+	
+	move $s0,$v0  # base = $s0 = $v0
+	
+	#Mensagem para informar o expoente
+	li $v0, 4
+	la $a0, prompt1
+	syscall
+	
+	#Input para pegar o valor inserido
+	li $v0, 5
+	syscall
+	
+	move $s1,$v0  # expoente = $s1 = $v0
+	move $s2,$s0  # $s2 = base = $s0
+	beq $zero, $s1, end
+	subi $s1, $s1, 1
+
+	
+	jal power
+	
+	li $v0, 4
+	la $a0, result
+	syscall
+		
+	li $v0, 1  
+	move $a0, $s2
+	syscall
+	
+	li $v0, 10
+	syscall
+	
+	
+power:	
+	addi $sp, $sp, -8
+	sw $ra, 4($sp)
+
+	beq $zero, $s1, exit
+	mul $s2, $s2, $s0   #resultado = base * expoente	
+	subi $s1, $s1, 1   #expoente - 1			
+	
+	jal power 
+	
+	lw $ra, 4($sp)
+	addi $sp, $sp, 8
+	jr $ra			
+
+exit:									
+	jr $ra
+
+end:
+	li $s2,1
+	li $v0, 4
+	la $a0, result
+	syscall
+		
+	li $v0, 1  
+	move $a0, $s2
+	syscall
+	
+	li $v0, 10
+	syscall		
+
+	

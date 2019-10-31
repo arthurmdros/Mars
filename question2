@@ -1,0 +1,61 @@
+.data
+     msg: .asciiz "Digite um número: "
+     par: .asciiz "É par!"
+     impar: .asciiz "É impar!"
+     linha: .asciiz " "     
+.text
+
+     main:
+     
+     	# Display message
+     
+     	li $v0, 4
+     	la $a0, msg
+     	syscall
+     
+     	# Pegando um número
+     	li $v0, 5
+     	syscall
+     
+	move $t0, $v0 # numero = $t0 = $v0
+	li $t1, 2     # divisor = 2
+     
+     	jal resto_divisao
+     	
+     	li $v0, 10
+     	syscall
+     
+     resto_divisao:
+     	
+     	move $t2, $t0  # resto = numero
+     	li $t3, 0      # quociente = 0
+     	j loop
+     	
+     	jr $ra
+     	
+     loop:
+     	 bgtu $t1, $t2, exit  # if (divisor <= resto)
+     	 sub $t2, $t2, $t1   # resto = resto - divisor
+     	 addi $t3, $t3, 1
+     	 j loop
+     
+     exit:
+     	beq $t2, 0, exit1 
+     
+     	li $v0, 4
+     	la $a0, impar
+     	syscall
+     	
+     exit1:	
+     
+     	bne $t2, 0, end
+     	li $v0, 4
+     	la $a0, par
+     	syscall
+     
+     end:
+         
+         li $v0, 4
+         la $a0, linha
+         syscall
+     
